@@ -50,7 +50,7 @@
             grid-gap: 8px;
         }
         #grid {
-            width: 80%;
+            width: 80%; 
             color: #ffffff;
             display: grid;
             grid-template-columns: repeat(13, 1fr);
@@ -215,6 +215,8 @@
         let clippies = [];
         let clippies_dexie = [];
         let offers = [];
+        let unique_offers = [];
+
         let Spade = {
             _2: 0,
             _3: 0,
@@ -321,8 +323,7 @@
             json.offers.forEach((element) => offers.push(element));
             page++;
         }
-        console.log(offers);        
-
+        
         for (const element of offers) {
             if (element.offered[0].name == "Gene") {
                 element.offered[0].name = "#Gene"
@@ -331,6 +332,10 @@
                 element.offered[0].name = "#Trent"
             }
         };
+        
+        console.log(offers);        
+
+
 
         let actions = offers.map((element) => getData(element.offered[0].name.split("#")[1], "offers"));
         var results = Promise.all(actions);
@@ -463,7 +468,7 @@ checkDexie();
 
 function orderData(clippies, type) {
     if (type == "owned") {
-        clippies.sort((a, b) => a.background.localeCompare(b.background) || a.card.localeCompare(b.card)) || a.color.localeCompare(b.color) || a.suit.localeCompare(b.suit);
+        clippies.sort((a, b) => a.background.localeCompare(b.background) || a.card.localeCompare(b.card) || a.color.localeCompare(b.color) || a.suit.localeCompare(b.suit));
         console.log(clippies);
     } else {
         clippies.sort((a, b) => a.card.localeCompare(b.card)) || a.price.toString().localeCompare(b.price.toString()) || a.color.localeCompare(b.color) || a.suit.localeCompare(b.suit);
@@ -852,10 +857,18 @@ async function getData(clippy, type) {
         if (type == "owned") {
             clippies.push(current_clippy);
         } else {
-            let myclip = offers.find((elem) => elem.offered[0].name == "Clippy #" + clippy);
-            current_clippy.price = Math.round( myclip.price * 1000) / 1000;
-            current_clippy.id = myclip.id;
-            clippies_dexie.push(current_clippy);
+            
+            let check_clippy = clippies_dexie.find((elem) => elem.number == current_clippy.number);
+            if (!check_clippy) {
+                console.log("double");
+                let myclip = offers.find((elem) => elem.offered[0].name == "Clippy #" + clippy);
+                current_clippy.price = Math.round( myclip.price * 1000) / 1000;
+                current_clippy.id = myclip.id;
+                clippies_dexie.push(current_clippy);
+            }
+
+
+            
         }
     }
     
