@@ -117,7 +117,7 @@
             <input type="text" style="width: 64ch; padding: 10px;" id="address" name="address" value="xch..."/>
             <button id="button1" style="padding: 10px;">Check</button>
         </div>
-        <div style="display: flex; justify-content: center;color: grey; margin: 20px;">Filter your deck by body or background color traits</div>
+        <div style="display: flex; justify-content: center;color: grey; margin: 20px;">Filter your deck by body and/or background color traits</div>
         <div id="top_grid">
             <select name="selectBG" id="selectBG">
                 <option value="">--Background--</option>
@@ -424,46 +424,87 @@ checkDexie();
         checkaddress(myaddy);
     });
 
-    const filterBG = document.getElementById('selectBG');
-    filterBG.addEventListener("click", (change) => {
+    function drawDeck() {
+        // clear Deck
         const clearnumbers = document.getElementById("grid").getElementsByClassName("top-right");
-        for (const element of clearnumbers) { element.innerHTML = ''; };
-        let images = document.getElementById("grid").getElementsByTagName('img');
-        for (image of images) {
-            image.src = "https://ipfs.io/ipfs/QmbW7u4Poo5uWssZygsKSho1f1gHE3Hn3AxtdwxsWM2PQR/9987.png";
-            image.style.opacity = 0.3;
-            image.style.border = "none";
-        }
-        const Black = clippies.filter(elem => elem.background === filterBG.value);
-        for (const element of Black) {
+
+        const clippies_off = clippies.filter(elem => elem.visibility === "off");
+        for (const element of clippies_off) { 
+            for (const element of clearnumbers) { element.style.opacity = 0; };
+            document.getElementById(element.suit + "_" + element.card).src = "https://ipfs.io/ipfs/QmbW7u4Poo5uWssZygsKSho1f1gHE3Hn3AxtdwxsWM2PQR/9987.png";
+            document.getElementById(element.suit + "_" + element.card).style.opacity = 0.3;
+            document.getElementById(element.suit + "_" + element.card).style.border = "none";
+        };
+        const clippies_on = clippies.filter(elem => elem.visibility === "on");
+        for (const element of clippies_on) { 
             document.getElementById(element.suit + "_" + element.card).src = element.png;
             document.getElementById(element.suit + "_" + element.card).style.opacity = 1;
             document.getElementById(element.suit + "_" + element.card).style.border = "1px solid #444444";
             document.getElementById(element.suit + "_" + element.card).style.borderRadius = "3px";
+            for (const element of clearnumbers) { element.style.opacity = 1; };
             reinitcount();
             numberData(element);
         };
+        
+    };
+
+    const filterBG = document.getElementById('selectBG');
+    filterBG.addEventListener("change", (event) => {
+        for (const element of clippies) {
+                element.visibility = "off"
+            };
+        if (filterBG.value && filterColor.value) {
+            const filtered = clippies.filter(elem => elem.background === filterBG.value && elem.color === filterColor.value);
+            for (const element of filtered) {
+                element.visibility = "on"
+            };    
+        } else if (filterBG.value && !filterColor.value) {
+            const filtered = clippies.filter(elem => elem.background === filterBG.value);
+            for (const element of filtered) {
+                element.visibility = "on"
+            };
+        } else if (!filterBG.value && filterColor.value) {
+            const filtered = clippies.filter(elem => elem.color === filterColor.value);
+            for (const element of filtered) {
+                element.visibility = "on"
+            };
+        } else {
+            for (const element of clippies) {
+                element.visibility = "on"
+            };
+            
+        }
+        drawDeck()
+        
     });
 
     const filterColor = document.getElementById('selectColor');
-    filterColor.addEventListener("click", (change) => {
-        const clearnumbers = document.getElementById("grid").getElementsByClassName("top-right");
-        for (const element of clearnumbers) { element.innerHTML = ''; };
-        let images = document.getElementById("grid").getElementsByTagName('img');
-        for (image of images) {
-            image.src = "https://ipfs.io/ipfs/QmbW7u4Poo5uWssZygsKSho1f1gHE3Hn3AxtdwxsWM2PQR/9987.png";
-            image.style.opacity = 0.3;
-            image.style.border = "none";
+    filterColor.addEventListener("change", (event) => {
+        for (const element of clippies) {
+                element.visibility = "off"
+            };
+        if (filterBG.value && filterColor.value) {
+            const filtered = clippies.filter(elem => elem.background === filterBG.value && elem.color === filterColor.value);
+            for (const element of filtered) {
+                element.visibility = "on"
+            };    
+        } else if (filterBG.value && !filterColor.value) {
+            const filtered = clippies.filter(elem => elem.background === filterBG.value);
+            for (const element of filtered) {
+                element.visibility = "on"
+            };
+        } else if (!filterBG.value && filterColor.value) {
+            const filtered = clippies.filter(elem => elem.color === filterColor.value);
+            for (const element of filtered) {
+                element.visibility = "on"
+            };
+        } else {
+            for (const element of clippies) {
+                element.visibility = "on"
+            };
+            
         }
-        const Black = clippies.filter(elem => elem.color === filterColor.value);
-        for (const element of Black) {
-            document.getElementById(element.suit + "_" + element.card).src = element.png;
-            document.getElementById(element.suit + "_" + element.card).style.opacity = 1;
-            document.getElementById(element.suit + "_" + element.card).style.border = "1px solid #444444";
-            document.getElementById(element.suit + "_" + element.card).style.borderRadius = "3px";
-            reinitcount();
-            numberData(element);
-        };
+        drawDeck()
     });
 
 function orderData(clippies, type) {
@@ -471,7 +512,7 @@ function orderData(clippies, type) {
         clippies.sort((a, b) => a.background.localeCompare(b.background) || a.card.localeCompare(b.card) || a.color.localeCompare(b.color) || a.suit.localeCompare(b.suit));
         console.log(clippies);
     } else {
-        clippies.sort((a, b) => a.card.localeCompare(b.card)) || a.price.toString().localeCompare(b.price.toString()) || a.color.localeCompare(b.color) || a.suit.localeCompare(b.suit);
+        clippies.sort((a, b) => a.card.localeCompare(b.card)) || a.background.localeCompare(b.background) || a.price.toString().localeCompare(b.price.toString()) || a.color.localeCompare(b.color) || a.suit.localeCompare(b.suit);
     }
     
     for (const element of clippies) {
@@ -853,6 +894,7 @@ async function getData(clippy, type) {
             png: png,
             price: 0,
             offer_id: "",
+            visibility: "off",
         }
         if (type == "owned") {
             clippies.push(current_clippy);
