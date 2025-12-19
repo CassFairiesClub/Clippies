@@ -49,6 +49,16 @@
             grid-template-rows: repeat(1, 1fr);
             grid-gap: 8px;
         }
+        #bottom_grid {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            width: 80%;
+            color: #ffffff;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(1, 1fr);
+            grid-gap: 8px;
+        }
         #grid {
             width: 80%; 
             color: #ffffff;
@@ -104,6 +114,19 @@
             grid-column-start: 4;
             grid-column-end: 5;
         }
+        #offerBG {
+            grid-column-start: 2;
+            grid-column-end: 3;
+        }
+        #offerColor {
+            grid-column-start: 3;
+            grid-column-end: 4;
+        }
+        #offerSuit {
+            grid-column-start: 4;
+            grid-column-end: 5;
+        }
+        
     </style>
 
 </head>
@@ -208,6 +231,35 @@
         </div>
         <div style="display: flex; justify-content: center; margin-top: 20px; font-size: x-large;">Dexie Offers</div>
         <div style="display: flex; justify-content: center;color: grey; margin-bottom: 20px;">Click any offer to open dexie.</div>
+        <div id="bottom_grid">
+            <select name="offerBG" id="offerBG">
+                <option value="">--Background--</option>
+                <option value="Black">Black</option>
+                <option value="Bordeaux">Bordeaux</option>
+                <option value="Green">Green</option>
+                <option value="Wall-Street">Wall-Street</option>
+                <option value="Ocean">Ocean</option>
+                <option value="Purple">Purple</option>
+                <option value="Help">Help</option>
+            </select>
+            <select name="offerColor" id="offerColor">
+                <option value="">--Body Color--</option>
+                <option value="Ivory">Ivory</option>
+                <option value="Gold">Gold</option>
+                <option value="Jade">Jade</option>
+                <option value="Amethyst">Amethyst</option>
+                <option value="Pink">Pink</option>
+                <option value="Aqua">Aqua</option>
+                <option value="Steel">Steel</option>
+            </select>
+            <select name="offerSuit" id="offerSuit">
+                <option value="">--Suit--</option>
+                <option value="Heart">Heart</option>
+                <option value="Spade">Spade</option>
+                <option value="Diamond">Diamond</option>
+                <option value="Club">Club</option>
+            </select>
+        </div>
         <div id="grid3"></div>
         <div style="display: flex; justify-content: center;color: grey;">Cass 2025</div>
     </div>   
@@ -217,66 +269,10 @@
         let offers = [];
         let unique_offers = [];
 
-        let Spade = {
-            _2: 0,
-            _3: 0,
-            _4: 0,
-            _5: 0,
-            _6: 0,
-            _7: 0,
-            _8: 0,
-            _9: 0,
-            _10: 0,
-            _Jack: 0,
-            _Queen: 0,
-            _King: 0,
-            _Ace: 0,
-        };
-        let Heart = {
-            _2: 0,
-            _3: 0,
-            _4: 0,
-            _5: 0,
-            _6: 0,
-            _7: 0,
-            _8: 0,
-            _9: 0,
-            _10: 0,
-            _Jack: 0,
-            _Queen: 0,
-            _King: 0,
-            _Ace: 0,
-        };
-        let Diamond = {
-            _2: 0,
-            _3: 0,
-            _4: 0,
-            _5: 0,
-            _6: 0,
-            _7: 0,
-            _8: 0,
-            _9: 0,
-            _10: 0,
-            _Jack: 0,
-            _Queen: 0,
-            _King: 0,
-            _Ace: 0,
-        };
-        let Club = {
-            _2: 0,
-            _3: 0,
-            _4: 0,
-            _5: 0,
-            _6: 0,
-            _7: 0,
-            _8: 0,
-            _9: 0,
-            _10: 0,
-            _Jack: 0,
-            _Queen: 0,
-            _King: 0,
-            _Ace: 0,
-        };
+        let Diamond = { _2: 0, _3: 0, _4: 0, _5: 0, _6: 0, _7: 0, _8: 0, _9: 0, _10: 0, _Jack: 0, _Queen: 0, _King: 0, _Ace: 0, };
+        let Spade = { _2: 0, _3: 0, _4: 0, _5: 0, _6: 0, _7: 0, _8: 0, _9: 0, _10: 0, _Jack: 0, _Queen: 0, _King: 0, _Ace: 0, };
+        let Heart = { _2: 0, _3: 0, _4: 0, _5: 0, _6: 0, _7: 0, _8: 0, _9: 0, _10: 0, _Jack: 0, _Queen: 0, _King: 0, _Ace: 0, };
+        let Club =  { _2: 0, _3: 0, _4: 0, _5: 0, _6: 0, _7: 0, _8: 0, _9: 0, _10: 0, _Jack: 0, _Queen: 0, _King: 0, _Ace: 0, };
 
     async function post(_request) {
         try {
@@ -305,7 +301,6 @@
         var results = Promise.all(actions);
 
         results.then(data => orderData(clippies, "owned"));
-        //getData(nfts[0].edition_number);
     };
 
     async function checkDexie() {
@@ -336,11 +331,9 @@
         console.log(offers);        
 
 
-
         let actions = offers.map((element) => getData(element.offered[0].name.split("#")[1], "offers"));
         var results = Promise.all(actions);
         results.then(data => orderData(clippies_dexie, "offers"));
-        //results.then(console.log(clippies_dexie));
     };        
 
 checkDexie();
@@ -348,66 +341,7 @@ checkDexie();
     const myButton = document.getElementById('button1');
     myButton.addEventListener("click", (event) => {
         clippies = [];
-        Spade = {
-            _2: 0,
-            _3: 0,
-            _4: 0,
-            _5: 0,
-            _6: 0,
-            _7: 0,
-            _8: 0,
-            _9: 0,
-            _10: 0,
-            _Jack: 0,
-            _Queen: 0,
-            _King: 0,
-            _Ace: 0,
-        };
-        Heart = {
-            _2: 0,
-            _3: 0,
-            _4: 0,
-            _5: 0,
-            _6: 0,
-            _7: 0,
-            _8: 0,
-            _9: 0,
-            _10: 0,
-            _Jack: 0,
-            _Queen: 0,
-            _King: 0,
-            _Ace: 0,
-        };
-        Diamond = {
-            _2: 0,
-            _3: 0,
-            _4: 0,
-            _5: 0,
-            _6: 0,
-            _7: 0,
-            _8: 0,
-            _9: 0,
-            _10: 0,
-            _Jack: 0,
-            _Queen: 0,
-            _King: 0,
-            _Ace: 0,
-        };
-        Club = {
-            _2: 0,
-            _3: 0,
-            _4: 0,
-            _5: 0,
-            _6: 0,
-            _7: 0,
-            _8: 0,
-            _9: 0,
-            _10: 0,
-            _Jack: 0,
-            _Queen: 0,
-            _King: 0,
-            _Ace: 0,
-        };
+        reinitcount();
 
         const myNode = document.getElementById("grid2");
         myNode.innerHTML = '';
@@ -444,6 +378,42 @@ checkDexie();
             for (const element of clearnumbers) { element.style.opacity = 1; };
             reinitcount();
             numberData(element);
+        };
+        
+    };
+    function drawOffer() {
+        // clear Offers
+        const clippies_on = clippies_dexie.filter(elem => elem.visibility === "on");
+        const myNode = document.getElementById("grid3");
+        myNode.innerHTML = '';
+        
+
+
+        for (const element of clippies_on) { 
+
+            
+            var mydiv = document.createElement("div");
+            mydiv.className = "container";
+            document.getElementById("grid3").appendChild(mydiv);
+
+            var elem = document.createElement("img");
+            elem.src = element.png;
+            elem.style.opacity = 1;
+            elem.style.borderRadius = "3px";
+            elem.id = element.id;
+            elem.addEventListener("click", function (e) {
+                console.log(element.id);
+                let url = "https://dexie.space/offers/" + element.id;
+                window.open(url, '_blank').focus();
+            });
+            mydiv.appendChild(elem);
+
+            var elem = document.createElement("div");
+            elem.className = "top-right";
+            elem.innerHTML = element.price;
+            elem.id = "price_" + element.id;
+            mydiv.appendChild(elem);
+            
         };
         
     };
@@ -507,12 +477,80 @@ checkDexie();
         drawDeck()
     });
 
+    const offerColor = document.getElementById('offerColor');
+    offerColor.addEventListener("change", (event) => {
+        for (const element of clippies_dexie) {
+                element.visibility = "off"
+            };
+        if (offerColor.value) {
+            offerBG.disabled = true;
+            offerSuit.disabled = true;
+            const filtered = clippies_dexie.filter(elem => elem.color === offerColor.value);
+            for (const element of filtered) {
+                element.visibility = "on"
+            };    
+        } else {
+            offerBG.disabled = false;
+            offerSuit.disabled = false;
+            for (const element of clippies_dexie) {
+                element.visibility = "on"
+            };
+        }
+        drawOffer()
+    });
+    const offerBG = document.getElementById('offerBG');
+    offerBG.addEventListener("change", (event) => {
+        for (const element of clippies_dexie) {
+                element.visibility = "off"
+            };
+        if (offerBG.value) {
+            offerColor.disabled = true;
+            offerSuit.disabled = true;
+            const filtered = clippies_dexie.filter(elem => elem.background === offerBG.value);
+            for (const element of filtered) {
+                element.visibility = "on"
+            };    
+        } else {
+            offerColor.disabled = false;
+            offerSuit.disabled = false;
+            for (const element of clippies_dexie) {
+                element.visibility = "on"
+            };
+        }
+        drawOffer()
+    });
+    const offerSuit = document.getElementById('offerSuit');
+    offerSuit.addEventListener("change", (event) => {
+        for (const element of clippies_dexie) {
+                element.visibility = "off"
+            };
+        if (offerSuit.value) {
+            offerBG.disabled = true;
+            offerColor.disabled = true;
+            const filtered = clippies_dexie.filter(elem => elem.suit === offerSuit.value);
+            for (const element of filtered) {
+                element.visibility = "on"
+            };    
+        } else {
+            offerBG.disabled = false;
+            offerColor.disabled = false;
+            for (const element of clippies_dexie) {
+                element.visibility = "on"
+            };
+        }
+        drawOffer()
+    });
+
+
+
+
 function orderData(clippies, type) {
     if (type == "owned") {
         clippies.sort((a, b) => a.background.localeCompare(b.background) || a.card.localeCompare(b.card) || a.color.localeCompare(b.color) || a.suit.localeCompare(b.suit));
         console.log(clippies);
     } else {
         clippies.sort((a, b) => a.card.localeCompare(b.card)) || a.background.localeCompare(b.background) || a.price.toString().localeCompare(b.price.toString()) || a.color.localeCompare(b.color) || a.suit.localeCompare(b.suit);
+        console.log(clippies_dexie);      
     }
     
     for (const element of clippies) {
@@ -521,7 +559,6 @@ function orderData(clippies, type) {
             var elem = document.createElement("img");
             elem.src = element.png;
             elem.style.opacity = 1;
-            // elem.style.border = "1px solid #444444";
             elem.style.borderRadius = "3px";
             elem.className = "container";
             document.getElementById("grid2").appendChild(elem);
@@ -541,8 +578,8 @@ function orderData(clippies, type) {
             var elem = document.createElement("img");
             elem.src = element.png;
             elem.style.opacity = 1;
-            // elem.style.border = "1px solid #444444";
             elem.style.borderRadius = "3px";
+            elem.id = element.id;
             elem.addEventListener("click", function (e) {
                 console.log(element.id);
                 let url = "https://dexie.space/offers/" + element.id;
@@ -553,78 +590,22 @@ function orderData(clippies, type) {
             var elem = document.createElement("div");
             elem.className = "top-right";
             elem.innerHTML = element.price;
+            elem.id = "price_" + element.id;
             mydiv.appendChild(elem);
-            
+
+
         }
-
-
     }
-    
-    ;    
-// filterBlack(clippies);
+
 };
+
 function reinitcount() {     
-        Spade = {
-            _2: 0,
-            _3: 0,
-            _4: 0,
-            _5: 0,
-            _6: 0,
-            _7: 0,
-            _8: 0,
-            _9: 0,
-            _10: 0,
-            _Jack: 0,
-            _Queen: 0,
-            _King: 0,
-            _Ace: 0,
-        };
-        Heart = {
-            _2: 0,
-            _3: 0,
-            _4: 0,
-            _5: 0,
-            _6: 0,
-            _7: 0,
-            _8: 0,
-            _9: 0,
-            _10: 0,
-            _Jack: 0,
-            _Queen: 0,
-            _King: 0,
-            _Ace: 0,
-        };
-        Diamond = {
-            _2: 0,
-            _3: 0,
-            _4: 0,
-            _5: 0,
-            _6: 0,
-            _7: 0,
-            _8: 0,
-            _9: 0,
-            _10: 0,
-            _Jack: 0,
-            _Queen: 0,
-            _King: 0,
-            _Ace: 0,
-        };
-        Club = {
-            _2: 0,
-            _3: 0,
-            _4: 0,
-            _5: 0,
-            _6: 0,
-            _7: 0,
-            _8: 0,
-            _9: 0,
-            _10: 0,
-            _Jack: 0,
-            _Queen: 0,
-            _King: 0,
-            _Ace: 0,
-        };
+    Diamond = { _2: 0, _3: 0, _4: 0, _5: 0, _6: 0, _7: 0, _8: 0, _9: 0, _10: 0, _Jack: 0, _Queen: 0, _King: 0, _Ace: 0, };
+    Spade = { _2: 0, _3: 0, _4: 0, _5: 0, _6: 0, _7: 0, _8: 0, _9: 0, _10: 0, _Jack: 0, _Queen: 0, _King: 0, _Ace: 0, };
+    Heart = { _2: 0, _3: 0, _4: 0, _5: 0, _6: 0, _7: 0, _8: 0, _9: 0, _10: 0, _Jack: 0, _Queen: 0, _King: 0, _Ace: 0, };
+    Club =  { _2: 0, _3: 0, _4: 0, _5: 0, _6: 0, _7: 0, _8: 0, _9: 0, _10: 0, _Jack: 0, _Queen: 0, _King: 0, _Ace: 0, };
 };
+
 function numberData(element) {     
 
             switch (element.card) {
@@ -895,6 +876,7 @@ async function getData(clippy, type) {
             price: 0,
             offer_id: "",
             visibility: "off",
+            
         }
         if (type == "owned") {
             clippies.push(current_clippy);
@@ -902,18 +884,13 @@ async function getData(clippy, type) {
             
             let check_clippy = clippies_dexie.find((elem) => elem.number == current_clippy.number);
             if (!check_clippy) {
-                console.log("double");
                 let myclip = offers.find((elem) => elem.offered[0].name == "Clippy #" + clippy);
                 current_clippy.price = Math.round( myclip.price * 1000) / 1000;
                 current_clippy.id = myclip.id;
                 clippies_dexie.push(current_clippy);
             }
-
-
-            
         }
     }
-    
 } catch (error) {
     console.error(error.message);
 }
