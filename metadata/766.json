@@ -1,0 +1,59 @@
+{
+  "format": "CHIP-0007",
+  "name": "Clippy #766",
+  "description": "10 000 Clippies to celebrate the Chia Gaming Primitive and the Permuto Capital MSFT trust.",
+  "minting_tool": "Cass",
+  "sensitive_content": false,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Bordeaux"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Ooo"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Bored"
+    },
+    {
+      "trait_type": "Eyebrows",
+      "value": "Angry"
+    },
+    {
+      "trait_type": "Card",
+      "value": "8"
+    },
+    {
+      "trait_type": "Color",
+      "value": "Pink"
+    },
+    {
+      "trait_type": "Suit",
+      "value": "Club"
+    }
+  ],
+  "collection": {
+    "name": "Clippies",
+    "id": "10803977-9d37-4b08-8206-d2a068324069",
+    "attributes": [
+      {
+        "type": "description",
+        "value": "10 000 Clippies to celebrate the Chia Gaming Primitive and the Permuto Capital MSFT trust."
+      },
+      {
+        "type": "icon",
+        "value": "https://ipfs.io/ipfs/QmQvxaB56Eu8kmAuJTRunLpJGaVMB1pLfJaADWRGa9NwKs"
+      },
+      {
+        "type": "banner",
+        "value": "https://ipfs.io/ipfs/QmUEPiX54NExb4UPKNiR4C3u4jwaW8C7cSMR9dmFfB2Zem"
+      },
+      {
+        "type": "twitter",
+        "value": "@CassXCH"
+      }
+    ]
+  }
+}
