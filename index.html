@@ -133,11 +133,11 @@
 <body style="width: 100%;">
     <div id="container">
         <div id="toptitle">📎 CLIPPIES DECK VIEWER 📎</div>
-        <div style="display: flex; justify-content: center;">Gather your Clippies into a single xch address and check your Deck</div>
+        <div style="display: flex; justify-content: center;">Gather your Clippies into a single DID or xch address and check your Deck</div>
         <div style="display: flex; justify-content: center; margin-bottom: 20px;">Collect all 52 cards for a custom Clippy</div>
         
         <div id="top">
-            <input type="text" style="width: 64ch; padding: 10px;" id="address" name="address" value="xch..."/>
+            <input type="text" style="width: 64ch; padding: 10px;" id="address" name="address" value="did:chia:... or xch..."/>
             <button id="button1" style="padding: 10px;">Check</button>
         </div>
         <div style="display: flex; justify-content: center;color: grey; margin: 20px;">Filter your deck by body and/or background color traits</div>
@@ -262,8 +262,10 @@
         </div>
         <div id="grid3"></div>
         <div style="display: flex; justify-content: center;color: grey;">Cass 2025</div>
-    </div>   
+    </div>
+    <script type="text/javascript" src="./chia-utils.js"></script>
     <script>
+        
         let clippies = [];
         let clippies_dexie = [];
         let offers = [];
@@ -283,14 +285,46 @@
             console.error("Error:", error);
         }
     };
-    async function checkaddress(_address) {
-        console.log(_address);
+    async function checkdid(_did) {
+        // let mydid = ChiaUtils.address_to_puzzle_hash("did:chia:1xwkxqqs27zmqp2ywphygtz04ase89hsmrrzmqeu6mmjrva4t2dzsm23dgd");
+        let mydid = ChiaUtils.address_to_puzzle_hash(_did);
+        console.log(mydid);
+        
         let nfts = [];
         const clippies_id = "col15487n4c9sm9jtv5svd0xt534dwrukrs94pd095r7hmxed3j2geesj5jxk5";
         let next = "";
         let items = 100;
         while (items == 100) {
-            const get_nfts = new Request("https://api.mintgarden.io/address/" + _address + "/nfts?collection_id=" + clippies_id + "&type=owned&size=100&page=" + next);
+            const get_nfts = new Request("https://api.mintgarden.io/profile/" + mydid + "/nfts?collection_id=" + clippies_id + "&type=owned&size=100&page=" + next);
+            const json = await post(get_nfts);
+            next = json.next;
+            items = json.items.length;
+            json.items.forEach((element) => nfts.push(element));
+        }
+            
+        let actions = nfts.map((element) => getData(element.edition_number, "owned"));
+        var results = Promise.all(actions);
+
+        results.then(data => orderData(clippies, "owned"));
+    };
+    async function checkaddress(_address) {
+        console.log(_address);
+        // console.log(_address.substring(0,3));
+        let nfts = [];
+        const clippies_id = "col15487n4c9sm9jtv5svd0xt534dwrukrs94pd095r7hmxed3j2geesj5jxk5";
+        let next = "";
+        let items = 100;
+        let api = "";
+        if (_address.substring(0,3) == "xch") {
+                api = "https://api.mintgarden.io/address/" + _address + "/nfts?collection_id=" + clippies_id + "&type=owned&size=100&page=";
+        } else {
+                let mydid = ChiaUtils.address_to_puzzle_hash(_address).split("x")[1];
+                api = "https://api.mintgarden.io/profile/" + mydid + "/nfts?collection_id=" + clippies_id + "&type=owned&size=100&page=";
+        }
+        console.log(api);
+
+        while (items == 100) {
+            const get_nfts = new Request(api + next);
             const json = await post(get_nfts);
             next = json.next;
             items = json.items.length;
