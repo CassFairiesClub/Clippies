@@ -874,8 +874,12 @@ async function getData(clippy, type) {
         ipfs = "QmbW7u4Poo5uWssZygsKSho1f1gHE3Hn3AxtdwxsWM2PQR";
     }
 
-    const url = "https://ipfs.io/ipfs/" + ipfs + "/" + clippy + ".json";
+    // const url = "https://ipfs.io/ipfs/" + ipfs + "/" + clippy + ".json";
+    // const png = "https://ipfs.io/ipfs/" + ipfs + "/" + clippy + ".png";
+
+    const url = "https://cassfairiesclub.github.io/Clippies/metadata/" + clippy + ".json";
     const png = "https://ipfs.io/ipfs/" + ipfs + "/" + clippy + ".png";
+
 
     try {
         const response = await fetch(url);
@@ -883,17 +887,17 @@ async function getData(clippy, type) {
           throw new Error(`Response status: ${response.status}`);
       }
 
-      const result = await response.text();
-      const attributes = result.search(/Background/g);
-      const sliced = result.slice(attributes);
-      const values = sliced.split("\"");
-      const Background = values[4];
-      const Body = values[12];
-      const Eyes = values[20];
-      const Eyebrows = values[28];
-      const Card = values[36];
-      const Color = values[44];
-      const Suit = values[52];
+
+
+    const result = await response.json();
+      
+    const Background = result.attributes[0].value;
+    const Body = result.attributes[1].value;
+    const Eyes = result.attributes[2].value;
+    const Eyebrows = result.attributes[3].value;
+    const Card = result.attributes[4].value;
+    const Color = result.attributes[5].value;
+    const Suit = result.attributes[6].value;
 
       if ( Suit != "Joker") {
         let current_clippy = {
