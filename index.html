@@ -302,7 +302,7 @@
             json.items.forEach((element) => nfts.push(element));
         }
             
-        let actions = nfts.map((element) => getData(element.edition_number, "owned"));
+        let actions = nfts.map((element) => getData(element.edition_number, "owned", element.thumbnail_uri));
         var results = Promise.all(actions);
 
         results.then(data => orderData(clippies, "owned"));
@@ -331,7 +331,7 @@
             json.items.forEach((element) => nfts.push(element));
         }
             
-        let actions = nfts.map((element) => getData(element.edition_number, "owned"));
+        let actions = nfts.map((element) => getData(element.edition_number, "owned", element.thumbnail_uri));
         var results = Promise.all(actions);
 
         results.then(data => orderData(clippies, "owned"));
@@ -365,7 +365,7 @@
         console.log(offers);        
 
 
-        let actions = offers.map((element) => getData(element.offered[0].name.split("#")[1], "offers"));
+        let actions = offers.map((element) => getData(element.offered[0].name.split("#")[1], "offers", element.thumbnail_uri));
         var results = Promise.all(actions);
         results.then(data => orderData(clippies_dexie, "offers"));
     };        
@@ -826,7 +826,7 @@ function numberData(element) {
             }
 };
 
-async function getData(clippy, type) {
+async function getData(clippy, type, thumbnail) {
     let ipfs;
 
     if (clippy == "Gene" || clippy == "Trent") {
@@ -874,11 +874,17 @@ async function getData(clippy, type) {
         ipfs = "QmbW7u4Poo5uWssZygsKSho1f1gHE3Hn3AxtdwxsWM2PQR";
     }
 
-    // const url = "https://ipfs.io/ipfs/" + ipfs + "/" + clippy + ".json";
-    // const png = "https://ipfs.io/ipfs/" + ipfs + "/" + clippy + ".png";
-
+    let png = "";
+    if (type == "owned" && thumbnail !== undefined) {
+        png = thumbnail;
+    } else {
+        png = "https://ipfs.io/ipfs/" + ipfs + "/" + clippy + ".png";
+    }
     const url = "https://cassfairiesclub.github.io/Clippies/metadata/" + clippy + ".json";
-    const png = "https://ipfs.io/ipfs/" + ipfs + "/" + clippy + ".png";
+    
+
+    // const url = "https://ipfs.io/ipfs/" + ipfs + "/" + clippy + ".json";
+    // const png = thumbnail;
 
 
     try {
@@ -891,13 +897,18 @@ async function getData(clippy, type) {
 
     const result = await response.json();
       
-    const Background = result.attributes[0].value;
-    const Body = result.attributes[1].value;
-    const Eyes = result.attributes[2].value;
-    const Eyebrows = result.attributes[3].value;
-    const Card = result.attributes[4].value;
-    const Color = result.attributes[5].value;
-    const Suit = result.attributes[6].value;
+    if (clippy == "4747") {
+        console.log(result.attributes);
+        console.log(thumbnail);
+
+      }
+      const Background = result.attributes[0].value;
+      const Body = result.attributes[1].value;
+      const Eyes = result.attributes[2].value;
+      const Eyebrows = result.attributes[3].value;
+      const Card = result.attributes[4].value;
+      const Color = result.attributes[5].value;
+      const Suit = result.attributes[6].value;
 
       if ( Suit != "Joker") {
         let current_clippy = {
